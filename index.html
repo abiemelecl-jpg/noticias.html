@@ -3,102 +3,524 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Noticias Premium - Versión 2</title>
+  <title>NoticiasPremium — Tiempo Real</title>
 
   <style>
-    body {
-      background: #0a0a0a;
-      color: #f0f0f0;
-      font-family: Arial, Helvetica, sans-serif;
-      margin: 0;
+    :root{
+      --bg:#060606; --bg2:#0d0d0f; --card:#111216; --card2:#0f1014;
+      --line:#23242b; --soft:#9aa0aa; --text:#eceef2; --blue:#60a5fa;
+      --blue2:#3b82f6; --green:#22c55e; --red:#ef4444; --amber:#f59e0b;
+      --radius:16px;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{
+      background: radial-gradient(1200px 800px at 70% -20%, #0b1220 0%, transparent 60%),
+                  radial-gradient(900px 700px at -10% 10%, #140b1d 0%, transparent 60%),
+                  var(--bg);
+      color:var(--text);
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      line-height:1.5;
+    }
+    a{color:inherit;text-decoration:none}
+    .container{width:92%; max-width:1200px; margin:auto}
+
+    header{
+      position:sticky; top:0; z-index:50;
+      background:rgba(6,6,6,.9);
+      backdrop-filter: blur(8px);
+      border-bottom:1px solid var(--line);
+    }
+    .nav{
+      display:grid; grid-template-columns:auto 1fr auto; gap:12px;
+      align-items:center; padding:12px 0;
+    }
+    .brand{
+      display:flex; align-items:center; gap:10px; font-weight:800;
+      letter-spacing:.3px; font-size:1.2rem; color:#fff;
+    }
+    .brand .dot{
+      width:34px;height:34px; display:grid; place-items:center;
+      background:linear-gradient(135deg,#111,#222); border:1px solid var(--line);
+      border-radius:10px; font-size:1.1rem;
+      box-shadow:0 0 0 1px #000 inset, 0 8px 22px rgba(0,0,0,.6);
+    }
+    .links{display:flex; gap:14px; flex-wrap:wrap; justify-content:center}
+    .links a{
+      color:#cfd3da; font-size:.95rem; padding:6px 8px; border-radius:8px;
+    }
+    .links a:hover{color:#fff; background:#0e0f14}
+    .right{
+      display:flex; gap:8px; align-items:center;
+    }
+    .pill{
+      font-size:.78rem; color:#cdd7ff; background:#0b1220;
+      border:1px solid #1e2a44; padding:5px 8px; border-radius:999px;
+      display:flex; gap:6px; align-items:center;
+    }
+    .pulse{
+      width:8px;height:8px;border-radius:999px;background:var(--green);
+      box-shadow:0 0 10px var(--green);
+      animation:pulse 1.2s infinite;
+    }
+    @keyframes pulse{0%{transform:scale(1);opacity:1}70%{transform:scale(2);opacity:0}100%{opacity:0}}
+
+    .search{
+      margin-left:auto;
+      display:flex; align-items:center; gap:8px;
+      background:var(--bg2); border:1px solid var(--line);
+      padding:6px 10px; border-radius:999px; width:min(520px,100%);
+    }
+    .search input{
+      flex:1; background:none; outline:none; border:none; color:#e5e7eb; font-size:.95rem;
+    }
+    .search button{
+      background:linear-gradient(135deg, #1f3b8a, #1e40af);
+      border:none; color:white; padding:8px 12px; border-radius:999px;
+      cursor:pointer; font-weight:700;
+    }
+    .search button:hover{filter:brightness(1.15)}
+
+    .hero{
+      padding:26px 0 8px;
+      display:grid; grid-template-columns:1.2fr .8fr; gap:14px;
+    }
+    .hero-card{
+      background:linear-gradient(180deg, #0b0c10 0%, #090a0e 100%);
+      border:1px solid var(--line); border-radius:22px; padding:18px;
+      box-shadow:0 14px 60px rgba(0,0,0,.6);
+      position:relative; overflow:hidden;
+    }
+    .hero-card:after{
+      content:""; position:absolute; inset:-60% -20% auto auto; width:520px;height:520px;
+      background:radial-gradient(circle, rgba(96,165,250,.25), transparent 60%);
+      transform:translate(10%,-20%); pointer-events:none;
+    }
+    .hero h1{font-size:2rem; font-weight:900; margin-bottom:6px}
+    .hero p{color:var(--soft); font-size:1rem}
+
+    .chips{
+      margin-top:12px; display:flex; gap:8px; flex-wrap:wrap;
+    }
+    .chip{
+      background:var(--card2); border:1px solid var(--line); color:#d7dbe2;
+      padding:7px 12px; border-radius:999px; font-size:.85rem; cursor:pointer;
+      transition:.2s ease;
+    }
+    .chip:hover{border-color:#2f5bbd; transform:translateY(-1px)}
+    .chip.active{
+      background:#0b1220; border-color:#2f5bbd; color:#e7efff;
+      box-shadow:0 0 0 1px rgba(96,165,250,.25) inset;
     }
 
-    header {
-      background: #111;
-      padding: 16px;
-      border-bottom: 1px solid #222;
+    .mini{
+      display:grid; grid-template-columns:1fr 1fr; gap:12px;
+    }
+    .mini .stat{
+      background:var(--card); border:1px solid var(--line); border-radius:14px; padding:12px;
+    }
+    .mini .stat h3{font-size:1rem; margin-bottom:4px}
+    .mini .stat p{font-size:.9rem; color:var(--soft)}
+
+    .section{
+      margin-top:26px;
+    }
+    .section-head{
+      display:flex; align-items:baseline; justify-content:space-between; margin-bottom:10px;
+    }
+    .section-head h2{
+      font-size:1.35rem; font-weight:900; color:#e7ecf3;
+    }
+    .section-head small{color:var(--soft)}
+
+    .grid{
+      display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:12px;
+    }
+    .card{
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      padding:12px;
+      display:flex; flex-direction:column; gap:8px;
+      transition:.2s ease;
+      min-height:150px;
+    }
+    .card:hover{
+      border-color:#2f5bbd;
+      transform:translateY(-2px);
+      box-shadow:0 10px 30px rgba(0,0,0,.45);
+    }
+    .thumb{
+      width:100%; height:130px; border-radius:12px; overflow:hidden;
+      background: #0b0c10;
+      border:1px solid #0e0f14;
+      display:grid; place-items:center;
+    }
+    .thumb img{width:100%; height:100%; object-fit:cover}
+    .kicker{
+      font-size:.74rem; color:#c7ccda; display:flex; gap:6px; flex-wrap:wrap;
+    }
+    .tag{
+      padding:2px 6px; border-radius:999px; background:#0b1220; border:1px solid #1e2a44;
+      font-size:.72rem; color:#cde1ff;
+    }
+    .title{
+      font-weight:800; font-size:1rem; line-height:1.25;
+      display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden;
+    }
+    .meta{
+      display:flex; justify-content:space-between; align-items:center; margin-top:auto; color:var(--soft);
+      font-size:.8rem;
+    }
+    .meta a{
+      color:var(--blue); font-weight:700;
     }
 
-    .nav {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      width: 90%;
-      margin: auto;
+    .row{
+      display:flex; gap:12px; overflow-x:auto; padding-bottom:6px;
+      scroll-snap-type:x mandatory;
+    }
+    .row .card{min-width:260px; scroll-snap-align:start}
+
+    .loading{
+      display:flex; align-items:center; gap:8px; color:var(--soft); font-size:.9rem;
+      padding:10px 0;
+    }
+    .spinner{
+      width:16px;height:16px;border-radius:999px;
+      border:2px solid #2a2c36; border-top-color:var(--blue);
+      animation:spin 1s linear infinite;
+    }
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .error{
+      background:#1a0e0e; border:1px solid #3b1515; color:#fecaca;
+      padding:10px; border-radius:12px; font-size:.9rem;
     }
 
-    .nav a {
-      color: #ccc;
-      margin-left: 16px;
-
-    text-decoration: none;
+    footer{
+      margin-top:30px; border-top:1px solid var(--line); padding:18px 0 24px;
+      color:var(--soft); font-size:.9rem;
     }
 
-    .nav a:hover {
-      color: #60a5fa;
+    @media(max-width:900px){
+      .hero{grid-template-columns:1fr}
+      .links{display:none}
+      .search{width:100%}
     }
-
-    h1 {
-      text-align: center;
-      margin-top: 30px;
-    }
-
-    .card {
-      background: #111;
-      border: 1px solid #222;
-      padding: 16px;
-      margin: 16px;
-      border-radius: 12px;
-    }
-
-    .card:hover {
-      border-color: #60a5fa;
-    }
-
-    .container {
-      width: 92%;
-      margin: auto;
-    }
-
   </style>
 </head>
 <body>
 
 <header>
-  <div class="nav">
-    <h2>🌎 NoticiasPremium</h2>
-
-    <div>
-      <a href="./index.html">Inicio</a>
-      <a href="./noticias.html" style="color:#60a5fa;">Nueva versión</a>
-      <a href="./admin.html">Admin</a>
+  <div class="container nav">
+    <div class="brand">
+      <div class="dot">🌍</div>
+      NoticiasPremium
     </div>
+
+    <div class="links">
+      <a href="./index.html">Inicio</a>
+      <a href="./noticias.html" style="color:var(--blue)">Noticias</a>
+      <a href="#sec-trending">Tendencias</a>
+      <a href="#sec-anime">Anime</a>
+      <a href="#sec-deportes">Deportes</a>
+      <a href="#sec-novelas">Novelas</a>
+    </div>
+
+    <div class="right">
+      <div class="pill"><span class="pulse"></span> En vivo</div>
+    </div>
+  </div>
+
+  <div class="container" style="padding-bottom:12px;">
+    <form class="search" id="searchForm">
+      <span>🔎</span>
+      <input id="searchInput" placeholder="Buscar: anime, fútbol, novelas turcas, tecnología..." />
+      <button type="submit">Buscar</button>
+    </form>
   </div>
 </header>
 
-<h1>Noticias Premium — Nueva Versión</h1>
+<main class="container">
+  <section class="hero">
+    <div class="hero-card">
+      <h1>Noticias en tiempo real, gratis.</h1>
+      <p>Actualización automática cada 60 segundos con fuentes globales.  
+         Elige una categoría o busca lo que te gusta.</p>
 
-<div class="container">
-  <div class="card">
-    <h3>🔥 Últimas noticias</h3>
-    <p>Aquí aparecerán las últimas noticias globales. Esta es una página nueva separada del index.</p>
-  </div>
+      <div class="chips" id="chips">
+        <!-- chips dinámicos -->
+      </div>
+      <div class="loading" id="mainLoading" style="display:none;">
+        <div class="spinner"></div>
+        Cargando noticias...
+      </div>
+      <div id="mainError" style="display:none;"></div>
+    </div>
 
-  <div class="card">
-    <h3>✨ Tendencias globales</h3>
-    <p>Sección lista para expandirse con más noticias en vivo.</p>
-  </div>
+    <div class="mini">
+      <div class="stat">
+        <h3>⚡ Última actualización</h3>
+        <p id="updatedAt">—</p>
+      </div>
+      <div class="stat">
+        <h3>🌐 Fuente</h3>
+        <p>GDELT (Global Database of Events, Language and Tone)</p>
+      </div>
+      <div class="stat">
+        <h3>🔁 Auto-refresh</h3>
+        <p>Cada 60 segundos</p>
+      </div>
+      <div class="stat">
+        <h3>✅ Sin registro</h3>
+        <p>Lectura libre para todos</p>
+      </div>
+    </div>
+  </section>
 
-  <div class="card">
-    <h3>📺 Entretenimiento</h3>
-    <p>Animes, novelas, series y contenido popular.</p>
-  </div>
+  <!-- MAIN FEED -->
+  <section class="section" id="sec-main">
+    <div class="section-head">
+      <h2 id="mainTitle">🚨 Última hora</h2>
+      <small id="mainSub">Global</small>
+    </div>
+    <div class="grid" id="mainGrid"></div>
+  </section>
 
-  <div class="card">
-    <h3>⚽ Deportes</h3>
-    <p>Noticias rápidas sobre fútbol, ligas del mundo y partidos en vivo.</p>
-  </div>
-</div>
+  <!-- TRENDING -->
+  <section class="section" id="sec-trending">
+    <div class="section-head">
+      <h2>🔥 Tendencias globales</h2>
+      <small>Lo más mencionado hoy</small>
+    </div>
+    <div class="row" id="trendingRow"></div>
+  </section>
+
+  <!-- ANIME / POP -->
+  <section class="section" id="sec-anime">
+    <div class="section-head">
+      <h2>✨ Anime y cultura pop</h2>
+      <small>Para adolescentes y fans</small>
+    </div>
+    <div class="row" id="animeRow"></div>
+  </section>
+
+  <!-- SPORTS -->
+  <section class="section" id="sec-deportes">
+    <div class="section-head">
+      <h2>⚽ Deportes (fútbol y más)</h2>
+      <small>Lo más reciente</small>
+    </div>
+    <div class="row" id="sportsRow"></div>
+  </section>
+
+  <!-- NOVELAS -->
+  <section class="section" id="sec-novelas">
+    <div class="section-head">
+      <h2>📺 Novelas y series (Turcas, USA, etc.)</h2>
+      <small>Para adultos y mayores</small>
+    </div>
+    <div class="row" id="novelasRow"></div>
+  </section>
+
+  <footer>
+    © NoticiasPremium · Tiempo real · Gratis sin registro  
+    <br/>*Las noticias se obtienen de fuentes públicas a través de GDELT.*
+  </footer>
+</main>
+
+<script>
+  // ===================== CONFIG =====================
+  const REFRESH_MS = 60_000;
+  const MAX_RECORDS = 12;
+
+  // Categorías principales (puedes editar/añadir)
+  const CATEGORIES = [
+    { id:"world", name:"🌍 Global", q:"world OR breaking news OR latest news" },
+    { id:"anime", name:"✨ Anime", q:"anime OR manga OR otaku OR animeflix OR crunchyroll" },
+    { id:"futbol", name:"⚽ Fútbol", q:"football OR soccer OR fifa OR champions league OR premier league" },
+    { id:"peliculas", name:"🎬 Películas", q:"movie OR cinema OR hollywood OR netflix film OR trailer" },
+    { id:"novelas", name:"📺 Novelas", q:"telenovela OR soap opera OR turkish series OR drama series" },
+    { id:"tech", name:"💻 Tecnología", q:"technology OR AI OR smartphone OR startup OR cybersecurity" },
+    { id:"animales", name:"🐾 Animales", q:"animals OR wildlife OR nature OR pets OR conservation" },
+  ];
+
+  let currentCategory = CATEGORIES[0];
+  let lastMainArticles = [];
+
+  // ===================== HELPERS =====================
+  const $ = (id) => document.getElementById(id);
+
+  function formatDate(iso){
+    if(!iso) return "";
+    // iso tipo 2025-11-22 18:00:00.000
+    try{
+      const d = new Date(iso.replace(" ", "T") + "Z");
+      return d.toLocaleString();
+    }catch(e){ return iso; }
+  }
+
+  function domainFromUrl(url){
+    try{ return new URL(url).hostname.replace("www.",""); }catch(e){ return ""; }
+  }
+
+  function setLoadingMain(on){
+    $("mainLoading").style.display = on ? "flex" : "none";
+  }
+
+  function setErrorMain(msg){
+    const el = $("mainError");
+    if(!msg){
+      el.style.display="none"; el.innerHTML="";
+      return;
+    }
+    el.style.display="block";
+    el.innerHTML = \`<div class="error">⚠️ \${msg}</div>\`;
+  }
+
+  function makeCard(a){
+    const img = a.socialimage || a.image || "";
+    const src = img ? \`<img src="\${img}" alt="img" onerror="this.parentElement.innerHTML='📰'"/>\` : "📰";
+    const country = a.sourceCountry ? a.sourceCountry.toUpperCase() : "GL";
+    const seen = formatDate(a.seendate);
+    const domain = domainFromUrl(a.url);
+    const lang = a.language ? a.language.toUpperCase() : "";
+
+    return \`
+      <article class="card">
+        <div class="thumb">\${src}</div>
+        <div class="kicker">
+          <span class="tag">\${country}</span>
+          \${lang ? \`<span class="tag">\${lang}</span>\` : ""}
+          \${domain ? \`<span class="tag">\${domain}</span>\` : ""}
+        </div>
+        <div class="title">\${a.title || "Sin título"}</div>
+        <div class="meta">
+          <span>\${seen}</span>
+          <a href="\${a.url}" target="_blank" rel="noreferrer">Leer</a>
+        </div>
+      </article>
+    \`;
+  }
+
+  async function fetchGDELT(query, max=MAX_RECORDS){
+    const url =
+      "https://api.gdeltproject.org/api/v2/doc/doc" +
+      \`?query=\${encodeURIComponent(query)}\` +
+      "&mode=ArtList&format=json&sort=HybridRel" +
+      \`&maxrecords=\${max}\`;
+
+    const r = await fetch(url);
+    if(!r.ok) throw new Error("Respuesta inválida de la API");
+    const data = await r.json();
+    return data.articles || [];
+  }
+
+  // ===================== RENDER =====================
+  function renderMain(articles, title, sub){
+    $("mainTitle").textContent = title;
+    $("mainSub").textContent = sub;
+    $("mainGrid").innerHTML = articles.map(makeCard).join("");
+  }
+
+  function renderRow(elId, articles){
+    const el = $(elId);
+    el.innerHTML = articles.map(makeCard).join("");
+  }
+
+  function renderChips(){
+    const chips = $("chips");
+    chips.innerHTML = "";
+    CATEGORIES.forEach(cat=>{
+      const b = document.createElement("button");
+      b.type="button";
+      b.className="chip" + (cat.id===currentCategory.id ? " active":"");
+      b.textContent = cat.name;
+      b.onclick = ()=> {
+        currentCategory = cat;
+        document.querySelectorAll(".chip").forEach(x=>x.classList.remove("active"));
+        b.classList.add("active");
+        loadMain();
+      };
+      chips.appendChild(b);
+    });
+  }
+
+  // ===================== LOADERS =====================
+  async function loadMain(searchTerm=""){
+    try{
+      setErrorMain("");
+      setLoadingMain(true);
+
+      const q = searchTerm
+        ? searchTerm
+        : currentCategory.q;
+
+      const arts = await fetchGDELT(q, 18);
+      lastMainArticles = arts;
+
+      renderMain(
+        arts,
+        searchTerm ? "🔎 Resultados de búsqueda" : "🚨 Última hora",
+        searchTerm ? \`Búsqueda: "\${searchTerm}"\` : currentCategory.name
+      );
+      $("updatedAt").textContent = new Date().toLocaleString();
+    }catch(e){
+      setErrorMain("No se pudieron cargar noticias. Revisa tu conexión o intenta otra categoría.");
+      console.error(e);
+    }finally{
+      setLoadingMain(false);
+    }
+  }
+
+  async function loadSections(){
+    // Tendencias globales
+    fetchGDELT("trending OR viral OR most talked about today", 10)
+      .then(a=>renderRow("trendingRow", a))
+      .catch(()=> { $("trendingRow").innerHTML = "<div class='error'>No hay tendencias por ahora.</div>"; });
+
+    // Anime / Pop
+    fetchGDELT(CATEGORIES.find(c=>c.id==="anime").q, 10)
+      .then(a=>renderRow("animeRow", a))
+      .catch(()=> { $("animeRow").innerHTML = "<div class='error'>No hay anime por ahora.</div>"; });
+
+    // Deportes
+    fetchGDELT(CATEGORIES.find(c=>c.id==="futbol").q, 10)
+      .then(a=>renderRow("sportsRow", a))
+      .catch(()=> { $("sportsRow").innerHTML = "<div class='error'>No hay deportes por ahora.</div>"; });
+
+    // Novelas / Series
+    fetchGDELT(CATEGORIES.find(c=>c.id==="novelas").q, 10)
+      .then(a=>renderRow("novelasRow", a))
+      .catch(()=> { $("novelasRow").innerHTML = "<div class='error'>No hay novelas por ahora.</div>"; });
+  }
+
+  function setupSearch(){
+    $("searchForm").addEventListener("submit", (e)=>{
+      e.preventDefault();
+      const term = $("searchInput").value.trim();
+      if(!term){
+        loadMain(); // vuelve a categoría actual
+        return;
+      }
+      loadMain(term);
+      window.scrollTo({top: $("sec-main").offsetTop - 70, behavior:"smooth"});
+    });
+  }
+
+  // ===================== INIT =====================
+  renderChips();
+  setupSearch();
+
+  // Primera carga
+  loadMain();
+  loadSections();
+
+  // Auto refresh
+  setInterval(()=>{
+    loadMain($("searchInput").value.trim());
+    loadSections();
+  }, REFRESH_MS);
+</script>
 
 </body>
 </html>
