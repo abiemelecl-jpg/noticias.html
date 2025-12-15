@@ -1,317 +1,138 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NexNews Premium | Noticias al Instante</title>
-    <style>
-        /* --- ESTILOS PREMIUM (CSS) --- */
-        :root {
-            --primary: #e63946;
-            --bg-dark: #121212;
-            --bg-card: #1e1e1e;
-            --text-light: #f1faee;
-            --text-gray: #a8dadc;
-            --shadow: 0 4px 20px rgba(0,0,0,0.5);
-            --transition: all 0.3s ease;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Fútbol en Vivo - Gratis y Sin Registro</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: #111;
+      color: #fff;
+    }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        
-        body { background-color: var(--bg-dark); color: var(--text-light); overflow-x: hidden; }
+    header {
+      background: #0b6e4f;
+      padding: 20px;
+      text-align: center;
+    }
 
-        /* Header */
-        header {
-            background-color: rgba(30, 30, 30, 0.95);
-            padding: 1rem 5%;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            backdrop-filter: blur(10px);
-        }
+    header h1 {
+      margin: 0;
+      font-size: 2rem;
+    }
 
-        .logo { font-size: 1.8rem; font-weight: bold; color: var(--primary); text-transform: uppercase; letter-spacing: 2px; }
-        .logo span { color: var(--text-light); }
+    nav {
+      background: #0a4735;
+      padding: 10px;
+      text-align: center;
+    }
 
-        /* Navegación */
-        nav { overflow-x: auto; white-space: nowrap; margin-top: 10px; padding-bottom: 5px; }
-        nav::-webkit-scrollbar { height: 4px; }
-        nav::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 4px; }
-        
-        .nav-links { display: flex; gap: 20px; list-style: none; }
-        .nav-btn {
-            background: none;
-            border: none;
-            color: var(--text-gray);
-            font-size: 1rem;
-            cursor: pointer;
-            transition: var(--transition);
-            padding: 5px 10px;
-            border-radius: 20px;
-        }
-        .nav-btn:hover, .nav-btn.active { color: white; background-color: var(--primary); }
+    nav a {
+      color: #fff;
+      margin: 0 15px;
+      text-decoration: none;
+      font-weight: bold;
+    }
 
-        /* Barra de última hora */
-        .breaking-news {
-            background: var(--primary);
-            color: white;
-            padding: 5px 5%;
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-        }
-        .breaking-label { font-weight: bold; margin-right: 10px; background: black; padding: 2px 8px; border-radius: 4px; }
-        .ticker { overflow: hidden; white-space: nowrap; width: 100%; }
-        .ticker-content { display: inline-block; animation: marquee 20s linear infinite; }
+    .container {
+      padding: 20px;
+      max-width: 1200px;
+      margin: auto;
+    }
 
-        @keyframes marquee { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
+    .match {
+      background: #222;
+      padding: 15px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
 
-        /* Contenedor Principal */
-        .container { max-width: 1400px; margin: 30px auto; padding: 0 20px; }
-        
-        .section-title { 
-            font-size: 2rem; 
-            margin-bottom: 20px; 
-            border-left: 5px solid var(--primary); 
-            padding-left: 15px; 
-        }
+    .match h2 {
+      margin: 0;
+      font-size: 1.2rem;
+    }
 
-        /* Grid de Noticias */
-        .news-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 25px;
-        }
+    .match a {
+      background: #0b6e4f;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: bold;
+    }
 
-        /* Tarjeta de Noticia */
-        .card {
-            background-color: var(--bg-card);
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: var(--shadow);
-            transition: var(--transition);
-            cursor: pointer;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-        }
+    .match a:hover {
+      background: #09885f;
+    }
 
-        .card:hover { transform: translateY(-10px); box-shadow: 0 10px 30px rgba(230, 57, 70, 0.2); }
+    footer {
+      background: #0a4735;
+      text-align: center;
+      padding: 15px;
+      color: #ccc;
+      margin-top: 40px;
+    }
 
-        .card-img-container { height: 200px; overflow: hidden; position: relative; }
-        .card-img { width: 100%; height: 100%; object-fit: cover; transition: var(--transition); }
-        .card:hover .card-img { transform: scale(1.1); }
+    @media (max-width: 600px) {
+      .match {
+        flex-direction: column;
+        text-align: center;
+      }
 
-        .category-tag {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            background-color: var(--primary);
-            color: white;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: bold;
-            text-transform: uppercase;
-        }
-
-        .card-content { padding: 20px; flex-grow: 1; display: flex; flex-direction: column; }
-        .card-date { font-size: 0.8rem; color: var(--text-gray); margin-bottom: 10px; }
-        .card-title { font-size: 1.2rem; font-weight: bold; margin-bottom: 10px; line-height: 1.4; }
-        .card-excerpt { font-size: 0.9rem; color: #ccc; flex-grow: 1; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
-        
-        .read-more { margin-top: 15px; color: var(--primary); font-weight: bold; text-decoration: none; display: inline-block; }
-
-        /* Footer */
-        footer { background: #0a0a0a; padding: 40px 5%; margin-top: 50px; text-align: center; border-top: 1px solid #333; }
-        .footer-text { color: var(--text-gray); font-size: 0.9rem; }
-
-        /* Loader */
-        .loader { display: none; text-align: center; padding: 20px; }
-        .spinner { border: 4px solid #333; border-top: 4px solid var(--primary); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            header { flex-direction: column; gap: 10px; }
-            .nav-links { gap: 10px; }
-            .section-title { font-size: 1.5rem; }
-        }
-    </style>
+      .match a {
+        margin-top: 10px;
+      }
+    }
+  </style>
 </head>
 <body>
 
-    <!-- Header -->
-    <header>
-        <div class="logo">Nex<span>News</span></div>
-        <nav>
-            <ul class="nav-links" id="category-menu">
-                <li><button class="nav-btn active" onclick="filterNews('todo')">Todo</button></li>
-                <li><button class="nav-btn" onclick="filterNews('animes')">Animes</button></li>
-                <li><button class="nav-btn" onclick="filterNews('deportes')">Deportes</button></li>
-                <li><button class="nav-btn" onclick="filterNews('juegos')">Juegos</button></li>
-                <li><button class="nav-btn" onclick="filterNews('peliculas')">Películas</button></li>
-                <li><button class="nav-btn" onclick="filterNews('musica')">Música</button></li>
-                <li><button class="nav-btn" onclick="filterNews('ciencia')">Ciencia</button></li>
-                <li><button class="nav-btn" onclick="filterNews('tecnologia')">Tecnología</button></li>
-            </ul>
-        </nav>
-    </header>
+  <header>
+    <h1>Fútbol en Vivo</h1>
+    <p>¡Todas las ligas, copas y eventos en vivo, sin registro y gratis!</p>
+  </header>
 
-    <!-- Barra de Última Hora -->
-    <div class="breaking-news">
-        <span class="breaking-label">EN VIVO</span>
-        <div class="ticker">
-            <div class="ticker-content" id="breaking-ticker">
-                Cargando últimas noticias del mundo...
-            </div>
-        </div>
+  <nav>
+    <a href="#">Inicio</a>
+    <a href="#">Ligas</a>
+    <a href="#">Copas</a>
+    <a href="#">Eventos</a>
+    <a href="#">Mundial</a>
+  </nav>
+
+  <div class="container">
+    <div class="match">
+      <h2>Real Madrid vs FC Barcelona - LaLiga</h2>
+      <a href="#">Ver en Vivo</a>
     </div>
 
-    <!-- Contenido Principal -->
-    <div class="container">
-        <h2 class="section-title" id="page-title">Últimas Noticias</h2>
-        
-        <!-- Grid donde se inyectan las noticias -->
-        <div class="news-grid" id="news-container">
-            <!-- Las noticias se cargarán aquí vía JS -->
-        </div>
-
-        <div class="loader" id="loader">
-            <div class="spinner"></div>
-        </div>
+    <div class="match">
+      <h2>Liverpool vs Manchester City - Premier League</h2>
+      <a href="#">Ver en Vivo</a>
     </div>
 
-    <footer>
-        <p class="footer-text">&copy; 2024 NexNews Premium. Todos los derechos reservados.</p>
-    </footer>
+    <div class="match">
+      <h2>Argentina vs Brasil - Eliminatorias Mundial</h2>
+      <a href="#">Ver en Vivo</a>
+    </div>
 
-    <script>
-        /* --- LÓGICA JAVASCRIPT --- */
+    <div class="match">
+      <h2>Francia vs Alemania - Copa Mundial</h2>
+      <a href="#">Ver en Vivo</a>
+    </div>
 
-        // 1. Base de datos simulada (Mock Data)
-        // Como HTML no tiene base de datos, usamos este array.
-        // Puedes agregar más objetos aquí manualmente.
-        const database = [
-            { id: 1, category: 'animes', title: 'Confirmada nueva temporada de "Demon Slayer"', image: 'https://placehold.co/600x400/1e1e1e/e63946?text=Anime+News', date: 'Hace 10 min', excerpt: 'El estudio Ufotable ha confirmado la producción del arco del Castillo Infinito con una calidad de animación sorprendente.' },
-            { id: 2, category: 'deportes', title: 'Final de infarto en la Champions League', image: 'https://placehold.co/600x400/1e1e1e/2a9d8f?text=Deportes', date: 'Hace 30 min', excerpt: 'El Real Madrid remonta en los últimos minutos para asegurar su paso a la siguiente ronda en un partido histórico.' },
-            { id: 3, category: 'juegos', title: 'GTA VI: Se filtran nuevas mecánicas de juego', image: 'https://placehold.co/600x400/1e1e1e/e9c46a?text=GTA+VI', date: 'Hace 1 hora', excerpt: 'Rockstar Games mantiene el silencio, pero insiders aseguran que el mapa será 3 veces más grande que el anterior.' },
-            { id: 4, category: 'tecnologia', title: 'La Inteligencia Artificial supera a médicos en diagnósticos', image: 'https://placehold.co/600x400/1e1e1e/264653?text=AI+Tech', date: 'Hace 2 horas', excerpt: 'Un nuevo estudio revela que los algoritmos de IA detectan enfermedades raras con un 99% de precisión.' },
-            { id: 5, category: 'peliculas', title: 'Marvel anuncia el regreso de los Vengadores originales', image: 'https://placehold.co/600x400/1e1e1e/e76f51?text=Cine', date: 'Hace 3 horas', excerpt: 'Rumores apuntan a que Robert Downey Jr. podría volver en Secret Wars bajo condiciones especiales.' },
-            { id: 6, category: 'ciencia', title: 'La NASA descubre agua en una luna de Júpiter', image: 'https://placehold.co/600x400/1e1e1e/457b9d?text=Espacio', date: 'Hace 4 horas', excerpt: 'La sonda Europa Clipper ha enviado datos que sugieren un océano subterráneo capaz de albergar vida.' },
-            { id: 7, category: 'musica', title: 'Bad Bunny anuncia gira mundial sorpresa', image: 'https://placehold.co/600x400/1e1e1e/f4a261?text=Musica', date: 'Hace 5 horas', excerpt: 'El artista puertorriqueño visitará 30 países en 2024 con un nuevo álbum bajo el brazo.' },
-            { id: 8, category: 'juegos', title: 'Elden Ring DLC: Fecha de lanzamiento revelada', image: 'https://placehold.co/600x400/1e1e1e/e9c46a?text=Elden+Ring', date: 'Hace 6 horas', excerpt: 'Shadow of the Erdtree llegará antes de lo esperado, prometiendo horas de dificultad extrema.' },
-        ];
+    <!-- Puedes seguir agregando más partidos en esta sección -->
+  </div>
 
-        const container = document.getElementById('news-container');
-        const loader = document.getElementById('loader');
-        const ticker = document.getElementById('breaking-ticker');
-        
-        let currentCategory = 'todo';
+  <footer>
+    © 2025 Fútbol en Vivo. No almacenamos datos ni requerimos registro.
+  </footer>
 
-        // 2. Función para renderizar noticias
-        function renderNews(filter = 'todo') {
-            container.innerHTML = ''; // Limpiar
-            loader.style.display = 'block'; // Mostrar carga
-
-            // Simulamos un pequeño retraso de red (efecto premium)
-            setTimeout(() => {
-                const filteredData = filter === 'todo' 
-                    ? database 
-                    : database.filter(item => item.category === filter);
-
-                if (filteredData.length === 0) {
-                    container.innerHTML = '<p style="text-align:center; grid-column: 1/-1;">No hay noticias en esta categoría por ahora.</p>';
-                } else {
-                    filteredData.forEach(news => {
-                        const card = document.createElement('article');
-                        card.className = 'card';
-                        card.innerHTML = `
-                            <div class="card-img-container">
-                                <span class="category-tag">${news.category}</span>
-                                <img src="${news.image}" alt="${news.title}" class="card-img">
-                            </div>
-                            <div class="card-content">
-                                <span class="card-date">${news.date}</span>
-                                <h3 class="card-title">${news.title}</h3>
-                                <p class="card-excerpt">${news.excerpt}</p>
-                                <a href="#" class="read-more">Leer más &rarr;</a>
-                            </div>
-                        `;
-                        container.appendChild(card);
-                    });
-                }
-                loader.style.display = 'none';
-            }, 500);
-        }
-
-        // 3. Función de filtrado (Menú)
-        function filterNews(category) {
-            currentCategory = category;
-            
-            // Actualizar botones activos
-            document.querySelectorAll('.nav-btn').forEach(btn => {
-                btn.classList.remove('active');
-                if(btn.textContent.toLowerCase().includes(category === 'todo' ? 'todo' : category)) {
-                    btn.classList.add('active');
-                }
-            });
-
-            document.getElementById('page-title').innerText = category === 'todo' ? 'Últimas Noticias' : 'Noticias de ' + category.charAt(0).toUpperCase() + category.slice(1);
-            
-            renderNews(category);
-        }
-
-        // 4. Actualización Automática Simulada (El truco "Totalmente Funcional")
-        // Esto añade una noticia aleatoria cada 30 segundos para simular que el sitio está vivo.
-        function simulateLiveUpdates() {
-            const newTitles = [
-                "¡ÚLTIMA HORA! Se rompe récord mundial en atletismo",
-                "Nueva actualización de Windows cambia todo el diseño",
-                "Descubren nueva especie de felino en el Amazonas",
-                "El precio del Bitcoin se dispara repentinamente"
-            ];
-            
-            setInterval(() => {
-                const randomTitle = newTitles[Math.floor(Math.random() * newTitles.length)];
-                const randomCat = ['deportes', 'tecnologia', 'ciencia', 'animes'][Math.floor(Math.random() * 4)];
-                
-                const newNews = {
-                    id: Date.now(),
-                    category: randomCat,
-                    title: randomTitle,
-                    image: `https://placehold.co/600x400/1e1e1e/e63946?text=BREAKING+NEWS`,
-                    date: '¡AHORA MISMO!',
-                    excerpt: 'Noticia de última hora llegando a nuestra redacción. Ampliaremos en breve.'
-                };
-
-                // Agregamos al principio del array
-                database.unshift(newNews);
-                
-                // Actualizamos el ticker de noticias
-                ticker.innerText = `🔴 ${newNews.title}  |  ${ticker.innerText.substring(0, 50)}...`;
-
-                // Si estamos viendo "todo" o la categoría de la nueva noticia, renderizamos de nuevo
-                if (currentCategory === 'todo' || currentCategory === randomCat) {
-                    // Animación visual de actualización (opcional)
-                    renderNews(currentCategory); 
-                }
-            }, 15000); // Cada 15 segundos ocurre algo nuevo
-        }
-
-        // Inicializar
-        document.addEventListener('DOMContentLoaded', () => {
-            renderNews();
-            simulateLiveUpdates();
-            
-            // Llenar el ticker inicial
-            ticker.innerText = database.map(n => `  ++ ${n.title} ++  `).join('');
-        });
-
-    </script>
 </body>
 </html>
